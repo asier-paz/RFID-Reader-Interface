@@ -1,0 +1,19 @@
+﻿<Window x:Class="Cronomur_WRI.AttenuationTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cronomur_WRI"
+        mc:Ignorable="d"
+        Title="Tabla de niveles de atenuación" Height="380" WindowStartupLocation="CenterScreen" SizeToContent="Width" ResizeMode="CanMinimize">
+	<Grid>
+		<ListView x:Name="listView">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Atenuación" Width="157" DisplayMemberBinding="{Binding Level}" />
+					<GridViewColumn Header="Rango" Width="175" DisplayMemberBinding="{Binding Range}" />
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+</Window>

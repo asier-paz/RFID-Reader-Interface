@@ -1,0 +1,27 @@
+﻿<Page x:Class="Cronomur_WRI.Inicio"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Cronomur_WRI"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="500"
+      Title="Inicio">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="140"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<ListBox x:Name="events_box" Grid.Row="0" Grid.Column="1"></ListBox>
+		<StackPanel Grid.Row="0" Grid.Column="0">
+			<Label Padding="12 6" FontWeight="Bold">Dirección IP:</Label>
+			<TextBox x:Name="conn_ip" Margin="12 0" Padding="4 6" TextChanged="conn_ip_TextChanged" Loaded="conn_ip_Loaded" />
+			<Label Padding="12,8,12,6" FontWeight="Bold">Puerto:</Label>
+			<TextBox x:Name="conn_port" Margin="12 0" Padding="4 6" Loaded="conn_port_Loaded" TextChanged="conn_port_TextChanged" />
+			<Button x:Name="connect_btn" Margin="12" Padding="4 6" FontWeight="Bold" Click="connect_btn_Click">Conectar</Button>
+			<Button x:Name="read_btn" Margin="12,0,12,12" Padding="4 6" FontWeight="Bold" IsEnabled="False" Click="read_btn_Click">Empezar lectura</Button>
+			<CheckBox x:Name="sound" Margin="12,0,12,12" Padding="4 -1" Checked="sound_Checked" Unchecked="sound_Unchecked">Emitir sonidos</CheckBox>
+		</StackPanel>
+	</Grid>
+</Page>

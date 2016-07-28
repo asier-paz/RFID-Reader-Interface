@@ -1,0 +1,53 @@
+﻿<Window x:Name="main_wnd" x:Class="Cronomur_WRI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cronomur_WRI"
+        mc:Ignorable="d"
+        Title="Cronomur | RFID Reader (SAAT-520 Series)" WindowStartupLocation="CenterScreen" FontSize="14.667" MinWidth="840" MinHeight="540" Background="#FFF6F6F6" Width="840" Margin="0" Closing="main_wnd_Closing" Icon="Resources/cronomur_icon.png">
+	<Window.Resources>
+		<Style x:Key="FontAwesome">
+			<Setter Property="TextElement.FontFamily" Value="pack://application:,,,/fonts/#FontAwesome" />
+		</Style>
+	</Window.Resources>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="210"/>
+			<ColumnDefinition Width="211*"/>
+			<ColumnDefinition Width="100*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="90"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC" VerticalAlignment="Top" Height="90" Background="#FFF0F0F0" Padding="4">
+			<Image x:Name="headerImage" HorizontalAlignment="Left" VerticalAlignment="Top"  Source="Resources/BEL_TIMING_SYSTEM.png" />
+		</Border>
+		<ToolBar Grid.Column="1" Background="#FFF0F0F0" Foreground="#FFCCCCCC" ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+			<Button ToolBar.OverflowMode="Never" VerticalAlignment="Stretch" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="12,2" Foreground="#FF555555" Click="btnInicio_Click">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Center" Text="&#xf015;" FontSize="32" Style="{DynamicResource FontAwesome}" />
+					<TextBlock Text="Inicio" VerticalAlignment="Center" />
+				</StackPanel>
+			</Button>
+			<Button ToolBar.OverflowMode="Never" VerticalAlignment="Stretch" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="12,2" Foreground="#FF555555" Click="btnCarrera_Click">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Center" Text="&#xf206;" FontSize="32" Style="{DynamicResource FontAwesome}" />
+					<TextBlock Text="RunScore" VerticalAlignment="Center" />
+				</StackPanel>
+			</Button>
+			<Button ToolBar.OverflowMode="Never" VerticalAlignment="Stretch" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="12,2" Foreground="#FF555555" Click="btnConfiguración_Click">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Center" Text="&#xf0a0;" FontSize="32" Style="{DynamicResource FontAwesome}" />
+					<TextBlock Text="Lector" VerticalAlignment="Center" />
+				</StackPanel>
+			</Button>
+			<Separator/>
+		</ToolBar>
+		<Label BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC" Grid.Column="2" x:Name="btnConnectionStatus" Content="Desconectado" FontSize="22" FontWeight="Light" Padding="12" Background="#FFF0F0F0" Foreground="#FF999999" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+		<Frame x:Name="_frameInicio" Grid.Row="1" Grid.ColumnSpan="3" Source="Inicio.xaml" />
+		<Frame x:Name="_frameConfiguracion" Grid.Row="1" Grid.ColumnSpan="3" Source="Configuracion.xaml" Visibility="Hidden" />
+		<Frame x:Name="_frameCarrera" Grid.Row="1" Grid.ColumnSpan="3" Source="ConfigCarrera.xaml" Visibility="Hidden" />
+	</Grid>
+</Window>
