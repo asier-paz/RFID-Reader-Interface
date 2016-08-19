@@ -7,10 +7,10 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Cronomur_WRI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Cronomur_Reader_Interface")]
+[assembly: AssemblyDescription("This application connects to a SAAT-520 reader and can set some device properties and read tags.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Asier Paz")]
 [assembly: AssemblyProduct("Cronomur_WRI")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
@@ -40,6 +40,9 @@ using System.Windows;
                                               // app, or any theme specific resource dictionaries)
 )]
 
+// Log4Net Assembly
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+
 
 // Version information for an assembly consists of the following four values:
 //
@@ -51,5 +54,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2016.1.*")]
+[assembly: AssemblyFileVersion("2016.1.8")]

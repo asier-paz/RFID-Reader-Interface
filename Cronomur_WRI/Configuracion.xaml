@@ -38,7 +38,7 @@
 				<GroupBox Header="Lectura" VerticalAlignment="Top" Padding="12" Margin="12,12,12,6">
 					<StackPanel>
 						<Label Padding="12 6" FontWeight="Bold">Tiempo de espera entre lecturas (en milisegundos):</Label>
-						<TextBox x:Name="reader_read_timeout" Margin="12 0" Padding="4 6" Text="100" TextChanged="reader_read_timeout_TextChanged" />
+						<TextBox x:Name="reader_read_timeout" Margin="12 0" Padding="4 6" Loaded="reader_read_timeout_Load" TextChanged="reader_read_timeout_TextChanged" />
 						<TextBlock Padding="12 6" Foreground="#FF999999" FontSize="12" TextWrapping="Wrap" FontStyle="Italic" TextAlignment="Justify">
 							Este es el tiempo que pasa entre lectura y lectura. Esto quiere decir que si tenemos un tiempo de
 							espera de 100 milisegundos, se harán 10 lecturas por segundo.

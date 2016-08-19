@@ -20,3 +20,27 @@ C:\Users\Asier Paz\Documents\Visual Studio 2015\Projects\Cronomur_WRI\Cronomur_W
 C:\Users\Asier Paz\Documents\Visual Studio 2015\Projects\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.exe
 C:\Users\Asier Paz\Documents\Visual Studio 2015\Projects\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.pdb
 C:\Users\Asier Paz\Documents\Visual Studio 2015\Projects\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.csprojResolveAssemblyReference.cache
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\bin\Release\Cronomur Reader Interface.exe.config
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\bin\Release\Cronomur Reader Interface.exe
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\bin\Release\Cronomur Reader Interface.pdb
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\bin\Release\log4net.dll
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\bin\Release\log4net.xml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\AttenuationTableWindow.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\ConfigCarrera.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Configuracion.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Inicio.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\MainWindow.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\App.g.cs
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur Reader Interface_MarkupCompile.cache
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur Reader Interface_MarkupCompile.lref
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\AttenuationTableWindow.baml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\ConfigCarrera.baml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Configuracion.baml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Inicio.baml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\MainWindow.baml
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur Reader Interface.g.resources
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.Properties.Resources.resources
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.csproj.GenerateResource.Cache
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur Reader Interface.exe
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur Reader Interface.pdb
+C:\Users\Asier Paz\Desktop\Cronomur_WRI\Cronomur_WRI\obj\Release\Cronomur_WRI.csprojResolveAssemblyReference.cache

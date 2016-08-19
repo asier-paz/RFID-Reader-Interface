@@ -26,6 +26,7 @@ namespace Cronomur_WRI
 
 		public void RevMsgAdd(RevMsgStruct revMsg)
 		{
+		/*
 			for (int tempi = 0; tempi < revMsgArray.Count; ++tempi)
 			{
 				if (revMsgArray[tempi].sCodeData == revMsg.sCodeData)
@@ -37,6 +38,8 @@ namespace Cronomur_WRI
 					return;
 				}
 			}
+			*/
+
 			revMsgArray.Add(revMsg);
 		}
 

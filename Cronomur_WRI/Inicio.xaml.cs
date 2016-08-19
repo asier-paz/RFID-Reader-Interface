@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Timers;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace Cronomur_WRI
 {
@@ -23,12 +24,16 @@ namespace Cronomur_WRI
 	/// </summary>
 	public partial class Inicio : Page
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// This holds the events class controllers
 		/// </summary>
 		public static Events events = null;
-		private Timer _readUpdateTimer = null;
-		public string results_file = "";
+		private System.Threading.Timer _readUpdateTimer = null;
+		private static int TIMER_MILLIS = 500;
+		public StreamWriter file_stream;
+		public string results_file_path = "";
 		public static bool sounds = false;
 
 		/// <summary>
@@ -41,12 +46,71 @@ namespace Cronomur_WRI
 			InitializeComponent();
 
 			events = new Events(events_box);
-
-			_readUpdateTimer = new Timer(500);
-			_readUpdateTimer.Elapsed += _readUpdateTimer_Elapsed;
+			
+			_readUpdateTimer = new System.Threading.Timer(ThreadSave, null, TIMER_MILLIS, Timeout.Infinite);
 
 			readerHandler.OnConnect += ReaderHandler_OnConnect;
 			readerHandler.OnDisconnect += ReaderHandler_OnDisconnect;
+		}
+
+		/// <summary>
+		/// Callback to do readings saving tasks
+		/// </summary>
+		/// <param name="state"></param>
+		private void ThreadSave(Object state) {
+			if (readerHandler.isReading()) {
+				log.Info("Ejecutando proceso de guardado...");
+				SaveTask();
+
+				// Reloading the timer of the task
+				_readUpdateTimer.Change(TIMER_MILLIS, Timeout.Infinite);
+			} else {
+				log.Info("El lector no está leyendo. Se guardarán los datos de la lista por última vez hasta que la lectura vuelva a empezar.");
+				SaveTask();
+				// Disposing the stream
+				if (file_stream != null) {
+					file_stream.Dispose();
+				}
+			}
+		}
+
+		private void SaveTask() {
+			if (readerHandler.getReceivedMsgBuffer().TagCount > 0)
+			{
+				List<string> lines = new List<string>();
+				log.Info("Longitud de la lista de chips registrados: " + readerHandler.getReceivedMsgBuffer().TagCount);
+
+				for (int i = 0; i < readerHandler.getReceivedMsgBuffer().TagCount; i++)
+				{
+					RevMsgStruct Rev = readerHandler.getReceivedMsgBuffer().Get(i);
+					lines.Add("RSCI," + Rev.sCodeData.ToString() + "," + Rev.tBeginTime.ToString("HH:mm:ss.fff") + "," + ConfigCarrera._event_name);
+				}
+
+				// File writing
+				if (file_stream != null)
+				{
+					log.Info("Escribiendo el archivo de chips...");
+					foreach (string line in lines)
+						file_stream.WriteLine(line);
+				}
+				else
+				{
+					log.Fatal("No se puede escribir en el archivo. (El Stream del archivo es nulo)");
+				}
+
+				// Sending data to RunScore if connected
+				if (RunScoreSocket.IsConnected())
+				{
+					var l = String.Join("\r\n", lines);
+					log.Info("Enviando datos al servidor de RunScore.");
+					RunScoreSocket.Send(l);
+					log.Debug("Datos enviados a RunScore: \r\n" + l);
+				}
+			}
+			else
+			{
+				log.Warn("No se ha guardado ningún dato. (Lista de chips registrados vacía)");
+			}
 		}
 
 		private void ReaderHandler_OnDisconnect(ReaderHandler obj)
@@ -72,15 +136,24 @@ namespace Cronomur_WRI
 			}
 			else
 			{
-				if (!Util.IsCorrenctIP(ConfigCarrera._ip))
-				{
-					MessageBox.Show("La dirección IP especificada en la configuración del servidor de RunScore no es una dirección IP válida.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				} else if (!Util.IsCorrectPortNumber(ConfigCarrera._port))
-				{
-					MessageBox.Show("El puerto especificado en la configuración del servidor de RunScore no es un número de puerto válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				} else if (String.IsNullOrWhiteSpace(ConfigCarrera._event_name))
-				{
-					MessageBox.Show("El nombre del evento de RunScore no puede estar vacío.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				if (ConfigCarrera._use_runscore) {
+					if (!Util.IsCorrenctIP(ConfigCarrera._ip))
+					{
+						MessageBox.Show("La dirección IP especificada en la configuración del servidor de RunScore no es una dirección IP válida.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
+					else if (!Util.IsCorrectPortNumber(ConfigCarrera._port))
+					{
+						MessageBox.Show("El puerto especificado en la configuración del servidor de RunScore no es un número de puerto válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
+					else if (String.IsNullOrWhiteSpace(ConfigCarrera._event_name))
+					{
+						MessageBox.Show("El nombre del evento de RunScore no puede estar vacío.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
+					else
+					{
+						if (readerHandler.connect())
+							connect_btn.Content = "Desconectar";
+					}
 				} else {
 					if (readerHandler.connect())
 						connect_btn.Content = "Desconectar";
@@ -130,64 +203,57 @@ namespace Cronomur_WRI
 
 				if (!readerHandler.isReading())
 				{
-					_readUpdateTimer.Enabled = false;
-
 					read_btn.Content = "Empezar lectura";
 				}
 			} else
 			{
 				// Create the txt file
 				var dir = Directory.GetCurrentDirectory() + @"\results";  // folder location
-				results_file = System.IO.Path.Combine(dir, "results_" + ConfigCarrera._event_name + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt");
+				results_file_path = System.IO.Path.Combine(dir, "results_" + ConfigCarrera._event_name + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt");
 
-				if (!Directory.Exists(dir))  // if it doesn't exist, create
+				if (!Directory.Exists(dir)) {
 					Directory.CreateDirectory(dir);
+				}
 
-				// Create the file
-				File.Create(results_file);
+				// Closing the Stream before creating a new one...
+				if (file_stream != null)
+				{
+					log.Info("Cerrando Stream de archivo de resultados...");
+					file_stream.Dispose();
+				}
+
+				// Open the file stream
+				log.Info("Abriendo nuevo Stream de archivo de resultados...");
+				file_stream = new StreamWriter(results_file_path, false);
+				file_stream.AutoFlush = true;
 
 				// Start reading
 				readerHandler.startReading();
 
 				if (readerHandler.isReading())
 				{
-					_readUpdateTimer.Enabled = true;
-
 					read_btn.Content = "Terminar lectura";
 				}
+
+				// Reloading the timer of the saving task
+				_readUpdateTimer.Change(TIMER_MILLIS, Timeout.Infinite);
 			}
 		}
 
-		private void _readUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			if (RunScoreSocket.IsConnected())
-			{
-				string lines = "";
-
-				for (int i = 0; i < readerHandler.getReceivedMsgBuffer().TagCount; i++)
-				{
-					RevMsgStruct Rev = readerHandler.getReceivedMsgBuffer().Get(i);
-					
-					// Write to the file first
-					using (System.IO.StreamWriter file = new System.IO.StreamWriter(results_file, true))
-					{
-						file.WriteLine("RSCI," + Rev.sCodeData.ToString() + "," + Rev.tLastTime.ToString("HH:mm:ss.fff") + "," + ConfigCarrera._event_name + "\r\n");
-					}
-
-					if (i == readerHandler.getReceivedMsgBuffer().TagCount)
-					{
-						lines += "RSCI," + Rev.sCodeData.ToString() + "," + Rev.tLastTime.ToString("HH:mm:ss.fff") + "," + ConfigCarrera._event_name + "\r\n<EOF>";
-					} else
-					{
-						lines += "RSCI," + Rev.sCodeData.ToString() + "," + Rev.tLastTime.ToString("HH:mm:ss.fff") + "," + ConfigCarrera._event_name + "\r\n";
-					}
-				}
-
-				if (!String.IsNullOrWhiteSpace(lines))
-				{
-					RunScoreSocket.Send(lines);
-				}
-			}
+		private void config_dump_btn_Click(object sender, RoutedEventArgs e) {
+			Inicio.events.add("Esta es la configuración actual:\n"+
+				"\t[General]\n" +
+				"\t\tSonidos activados: " + Inicio.sounds + "\n" +
+				"\t[Lector]\n" +
+				"\t\tIP del lector: " + readerHandler.getIpAddress() + "\n" +
+				"\t\tPuerto: " + readerHandler.getPort() + "\n" +
+				"\t\tTiempo de espera entre lecturas: " + readerHandler.getReaderTimeout() + " millis.\n" +
+				"\t[RunScore]\n" +
+				"\t\tUsar RunScore: " + ConfigCarrera._use_runscore + "\n" +
+				"\t\tDirección IP: " + ConfigCarrera._ip + "\n" +
+				"\t\tPuerto: " + ConfigCarrera._port + "\n" +
+				"\t\tNombre carrera: " + ConfigCarrera._event_name + "\n" +
+				"\t\tTiempo máximo para establecer conexión: " + ConfigCarrera._timeout + " millis.");
 		}
 
 		private void sound_Checked(object sender, RoutedEventArgs e)

@@ -74,6 +74,10 @@ namespace Cronomur_WRI
 			rangesWnd.Show();
 		}
 
+		private void reader_read_timeout_Load(object sender, RoutedEventArgs e) {
+			reader_read_timeout.Text = readerHandler.getReaderTimeout().ToString();
+		}
+
 		private void reader_read_timeout_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			try

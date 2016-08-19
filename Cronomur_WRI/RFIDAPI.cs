@@ -9,7 +9,9 @@ namespace Szaat.RFID.CSharpAPI
 {
     public class RfidApi
     {
-        private class RFID_Wrapper
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private class RFID_Wrapper
         {
             [DllImport("RFIDAPI.dll", EntryPoint = "SAAT_Copyright")]
             public static extern bool SAAT_Copyright(out IntPtr pHandle, StringBuilder copyright);
@@ -53,8 +55,8 @@ namespace Szaat.RFID.CSharpAPI
             [DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YRevIDMsgHex")]
             public static extern int SAAT_YRevIDMsgHex(IntPtr pHandle, byte[] pIDData, out byte nIDLen, out byte nBit);
 
-            [DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YRevIDMsgDec")]
-            public static extern int SAAT_YRevIDMsgDec(IntPtr pHandle, out uint pId, out byte nBit);
+			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YRevIDMsgDec")]
+			public static extern int SAAT_YRevIDMsgDec(IntPtr pHandle, out uint pId, out byte nBit);
 
 			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YAntennaPowerQuery")]
 			public static extern bool SAAT_YAntennaPowerQuery(IntPtr pHandle, ref byte rfPower);
@@ -70,6 +72,9 @@ namespace Szaat.RFID.CSharpAPI
 
 			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_HeartSend")]
 			public static extern bool SAAT_HeartSend(IntPtr pHandle);
+
+			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YBuzzerSet")]
+			public static extern bool SAAT_YBuzzerSet(IntPtr pHandle, byte nPara);
 		}
 
         /// <summary>
@@ -86,6 +91,21 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+			}
+
+			return false;
+		}
+
+		public static bool SAAT_YBuzzerSet(byte nPara) {
+			try
+			{
+				return RFID_Wrapper.SAAT_YBuzzerSet(pHandle, nPara);
+			}
+			catch (DllNotFoundException e)
+			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -100,6 +120,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -114,6 +135,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -127,7 +149,8 @@ namespace Szaat.RFID.CSharpAPI
                 return RFID_Wrapper.SAAT_Copyright(out pHandle, copyright);
             } catch (DllNotFoundException e)
             {
-                Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
             }
 
             return false;
@@ -141,7 +164,8 @@ namespace Szaat.RFID.CSharpAPI
             }
             catch (DllNotFoundException e)
             {
-                Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
             }
 
             return false;
@@ -155,7 +179,8 @@ namespace Szaat.RFID.CSharpAPI
             }
             catch (DllNotFoundException e)
             {
-                Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
             }
 
             return false;
@@ -169,6 +194,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -183,7 +209,8 @@ namespace Szaat.RFID.CSharpAPI
             }
             catch (DllNotFoundException e)
             {
-                Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
             }
 
             return false;
@@ -197,6 +224,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -211,6 +239,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -225,6 +254,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -239,6 +269,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -253,6 +284,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -270,6 +302,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 
@@ -284,6 +317,7 @@ namespace Szaat.RFID.CSharpAPI
 			}
 			catch (DllNotFoundException e)
 			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
 			}
 

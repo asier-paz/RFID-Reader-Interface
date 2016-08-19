@@ -20,6 +20,8 @@ namespace Cronomur_WRI
     /// </summary>
     public partial class MainWindow : Window
     {
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Reader Hanlder instance
 		/// </summary>

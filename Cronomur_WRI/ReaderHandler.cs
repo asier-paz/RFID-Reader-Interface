@@ -12,6 +12,8 @@ namespace Cronomur_WRI
 {
 	public class ReaderHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger("ReadingsLogger");
+
 		/// <summary>
 		/// Singleton instance
 		/// </summary>
@@ -45,7 +47,7 @@ namespace Cronomur_WRI
 		/// <summary>
 		/// Delay between read requests.
 		/// </summary>
-		private int _readerReadTimeout = 100;
+		private int _readerReadTimeout = 200;
 		/// <summary>
 		/// Reader info
 		/// </summary>
@@ -162,6 +164,13 @@ namespace Cronomur_WRI
 			{
 				AddSafeTextEvent("Error intentando abrir una conexión con el dispositivo. Sin embargo la interfaz TCP ha sido inicializada.");
 				return false;
+			}
+
+			// Setting the buzzer on
+			if (Inicio.sounds) {
+				RfidApi.SAAT_YBuzzerSet(1);
+			} else {
+				RfidApi.SAAT_YBuzzerSet(0);
 			}
 
 			// Setting lang to EN
@@ -302,17 +311,19 @@ namespace Cronomur_WRI
 			while (bReadCodeState)
 			{
 				nRevMsgResult = ReceiveCodeMsg(ref revMsg);
-				if (nRevMsgResult == 1)
-				{
-					bConnectIsOK = true;
-					ReceivedMsgBuffer.RevMsgAdd(revMsg);
 
-					if (Inicio.sounds)
-						Win32.Beep(Win32.BeepType.Success);
-				}
-				else if (nRevMsgResult == 2)
-				{
+				if (nRevMsgResult != -1) {
+					if (nRevMsgResult == 1)
+					{
+						log.Info("El chip " + revMsg.sCodeData + " ha sido añadido a la lista con el tiempo " + revMsg.tBeginTime);
+						ReceivedMsgBuffer.RevMsgAdd(revMsg);
+					}
+
 					bConnectIsOK = true;
+				} else {
+					Console.WriteLine("nRevMsgResult == -1");
+					// error
+					bConnectIsOK = false;
 				}
 
 				// Every number of seconds it checks if the connection is OK and try to reconnect if not
@@ -322,6 +333,7 @@ namespace Cronomur_WRI
 					if (!bConnectIsOK)
 					{
 						//AddSafeTextEvent("Reiniciando el proceso de lectura...");
+						Console.WriteLine("Reconectando lectura...");
 						Reconnect();
 						//AddSafeTextEvent("Proceso reiniciado.");
 					}

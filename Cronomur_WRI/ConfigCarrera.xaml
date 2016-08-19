@@ -18,6 +18,7 @@
 							<RowDefinition />
 							<RowDefinition />
 							<RowDefinition />
+							<RowDefinition />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="5*" />
@@ -25,11 +26,12 @@
 						</Grid.ColumnDefinitions>
 
 						<Label Grid.Row="0" Grid.Column="0" Padding="12 6" FontWeight="Bold">Dirección IP:</Label>
-						<TextBox Grid.Row="1" Grid.Column="0" x:Name="rs_ip" Margin="12 0" Padding="4 6" Text="127.0.0.1" TextChanged="rs_ip_TextChanged" />
+						<TextBox Grid.Row="1" Grid.Column="0" x:Name="rs_ip" Margin="12 0" Padding="4 6" IsEnabled="False" Text="127.0.0.1" TextChanged="rs_ip_TextChanged" />
 						<Label Grid.Row="0" Grid.Column="1" Padding="12 6" FontWeight="Bold">Puerto:</Label>
-						<TextBox Grid.Row="1" Grid.Column="1" x:Name="rs_port" Margin="12 0" Padding="4 6" Text="7000" TextChanged="rs_port_TextChanged" />
+						<TextBox Grid.Row="1" Grid.Column="1" x:Name="rs_port" Margin="12 0" Padding="4 6" IsEnabled="False" Text="7000" TextChanged="rs_port_TextChanged" />
 						<Label Grid.Row="2" Grid.ColumnSpan="2" Padding="12 6" FontWeight="Bold">Evento:</Label>
-						<TextBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="rs_event_name" Margin="12 0" Padding="4 6" TextChanged="rs_event_name_TextChanged" />
+						<TextBox Grid.Row="3" Grid.ColumnSpan="2" x:Name="rs_event_name" Margin="12 0" Padding="4 6" IsEnabled="False" TextChanged="rs_event_name_TextChanged" />
+						<CheckBox x:Name="use_runscore" Grid.Row="4" Grid.Column="0" Margin="12,12,12,12" Padding="4 -1" IsChecked="False" Checked="use_runscore_Checked" Unchecked="use_runscore_Unchecked">Usar un servidor de RunScore</CheckBox>
 					</Grid>
 				</StackPanel>
 			</GroupBox>

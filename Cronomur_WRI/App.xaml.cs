@@ -13,5 +13,6 @@ namespace Cronomur_WRI
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

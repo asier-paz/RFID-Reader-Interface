@@ -27,6 +27,7 @@ namespace Cronomur_WRI
 		public static string _port = "";
 		public static string _event_name = "";
 		public static int _timeout = 5000;
+		public static bool _use_runscore = false;
 
 		public ConfigCarrera()
 		{
@@ -43,8 +44,9 @@ namespace Cronomur_WRI
 
 		private void Reader_OnStartReading()
 		{
-			//Console.WriteLine("Now it should start to send data to RunScore...");
-			RunScoreSocket.StartClient(_ip, int.Parse(_port));
+			if (_use_runscore) {
+				RunScoreSocket.StartClient(_ip, int.Parse(_port));
+			}
 		}
 
 		private void rs_ip_TextChanged(object sender, TextChangedEventArgs e)
@@ -78,6 +80,22 @@ namespace Cronomur_WRI
 			{
 				Inicio.events.add("El nombre del evento no puede estar vacío.");
 			}
+		}
+
+		private void use_runscore_Checked(object sender, RoutedEventArgs e)
+		{
+			_use_runscore = true;
+			rs_ip.IsEnabled = true;
+			rs_port.IsEnabled = true;
+			rs_event_name.IsEnabled = true;
+		}
+
+		private void use_runscore_Unchecked(object sender, RoutedEventArgs e)
+		{
+			_use_runscore = false;
+			rs_ip.IsEnabled = false;
+			rs_port.IsEnabled = false;
+			rs_event_name.IsEnabled = false;
 		}
 	}
 }

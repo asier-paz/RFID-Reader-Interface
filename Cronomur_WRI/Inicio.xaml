@@ -21,6 +21,7 @@
 			<TextBox x:Name="conn_port" Margin="12 0" Padding="4 6" Loaded="conn_port_Loaded" TextChanged="conn_port_TextChanged" />
 			<Button x:Name="connect_btn" Margin="12" Padding="4 6" FontWeight="Bold" Click="connect_btn_Click">Conectar</Button>
 			<Button x:Name="read_btn" Margin="12,0,12,12" Padding="4 6" FontWeight="Bold" IsEnabled="False" Click="read_btn_Click">Empezar lectura</Button>
+			<Button x:Name="config_dump_btn" Margin="12,0,12,12" Padding="4 6" FontWeight="Bold" Click="config_dump_btn_Click">Mostrar config.</Button>
 			<CheckBox x:Name="sound" Margin="12,0,12,12" Padding="4 -1" Checked="sound_Checked" Unchecked="sound_Unchecked">Emitir sonidos</CheckBox>
 		</StackPanel>
 	</Grid>

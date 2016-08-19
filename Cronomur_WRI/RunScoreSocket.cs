@@ -222,7 +222,7 @@ namespace Cronomur_WRI
 		public static void Send(String data)
 		{
 			// Convert the string data to byte data using ASCII encoding.
-			byte[] byteData = Encoding.UTF8.GetBytes(data);
+			byte[] byteData = Encoding.UTF8.GetBytes(data + "<EOF>");
 
 			// Begin sending the data to the remote device.
 			client.BeginSend(byteData, 0, byteData.Length, 0,
