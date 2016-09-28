@@ -39,14 +39,14 @@ namespace Cronomur_WRI
 
 		private void Reader_OnStopReading()
 		{
-			RunScoreSocket.disconnect();
+			if (_use_runscore)
+				RunScoreSocket.disconnect();
 		}
 
 		private void Reader_OnStartReading()
 		{
-			if (_use_runscore) {
+			if (_use_runscore)
 				RunScoreSocket.StartClient(_ip, int.Parse(_port));
-			}
 		}
 
 		private void rs_ip_TextChanged(object sender, TextChangedEventArgs e)

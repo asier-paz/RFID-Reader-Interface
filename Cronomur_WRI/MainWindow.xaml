@@ -43,11 +43,18 @@
 					<TextBlock Text="Lector" VerticalAlignment="Center" />
 				</StackPanel>
 			</Button>
+			<Button ToolBar.OverflowMode="Never" VerticalAlignment="Stretch" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="12,2" Foreground="#FF555555" Click="btnReadConfig_Click">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Center" Text="&#xf085;" FontSize="32" Style="{DynamicResource FontAwesome}" />
+					<TextBlock Text="Conf. Lectura" VerticalAlignment="Center" />
+				</StackPanel>
+			</Button>
 			<Separator/>
 		</ToolBar>
 		<Label BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC" Grid.Column="2" x:Name="btnConnectionStatus" Content="Desconectado" FontSize="22" FontWeight="Light" Padding="12" Background="#FFF0F0F0" Foreground="#FF999999" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
 		<Frame x:Name="_frameInicio" Grid.Row="1" Grid.ColumnSpan="3" Source="Inicio.xaml" />
 		<Frame x:Name="_frameConfiguracion" Grid.Row="1" Grid.ColumnSpan="3" Source="Configuracion.xaml" Visibility="Hidden" />
 		<Frame x:Name="_frameCarrera" Grid.Row="1" Grid.ColumnSpan="3" Source="ConfigCarrera.xaml" Visibility="Hidden" />
+		<Frame x:Name="_frameReadConfig" Grid.Row="1" Grid.ColumnSpan="3" Source="ReadConfig.xaml" Visibility="Hidden" />
 	</Grid>
 </Window>

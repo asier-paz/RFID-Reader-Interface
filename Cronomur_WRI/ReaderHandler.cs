@@ -230,10 +230,40 @@ namespace Cronomur_WRI
 				}
 			}
 
-			if (!RfidApi.SAAT_YMakeTagUpLoadIDCode(0x01, 0x01))
+			/*
+			if (!CReadCode())
 			{
+				log.Info("SAAT_YMakeTagUpLoadIDCode false.");
 				AddSafeTextEvent("Error: No se pudo empezar a leer.");
 				return;
+			}
+			*/
+
+			if (MainWindow._readMode == 0) {
+				if (!RfidApi.SAAT_YReadIDCode(0x01, 0x01, 200))
+				{
+					log.Info("SAAT_YReadIDCode false.");
+					AddSafeTextEvent("Error: No se pudo empezar a leer.");
+					return;
+				}
+			} else if (MainWindow._readMode == 1) {
+				bool t = RfidApi.SAAT_YReadIDCode(0x01, 0x00, 100);
+				log.Info("[Test Reading Mode 1] => " + t);
+				if (!t)
+				{
+					log.Info("SAAT_YReadIDCode false.");
+					AddSafeTextEvent("Error: No se pudo empezar a leer.");
+					return;
+				}
+			} else if (MainWindow._readMode == 2) {
+				bool t = RfidApi.SAAT_YReadIDCode(0x01, 0x01, 100);
+				log.Info("[Test Reading Mode 2] => " + t);
+				if (!t)
+				{
+					log.Info("SAAT_YReadIDCode false.");
+					AddSafeTextEvent("Error: No se pudo empezar a leer.");
+					return;
+				}
 			}
 
 			bReadCodeState = true;
@@ -275,6 +305,11 @@ namespace Cronomur_WRI
 			OnStopReading();
 		}
 
+		private bool CReadCode()
+		{
+			return RfidApi.SAAT_YMakeTagUpLoadIDCode(0x01, 0x01); ;
+		}
+
 		/// <summary>
 		/// Block the thread until it starts to read again.
 		/// </summary>
@@ -304,7 +339,6 @@ namespace Cronomur_WRI
 		private void ReceiveCodeMsgThread()
 		{
 			int nRevMsgResult = 0;
-
 			RevMsgStruct revMsg = new RevMsgStruct();
 			int dwStart = System.Environment.TickCount;
 			bool bConnectIsOK = false;
@@ -315,8 +349,40 @@ namespace Cronomur_WRI
 				if (nRevMsgResult != -1) {
 					if (nRevMsgResult == 1)
 					{
-						log.Info("El chip " + revMsg.sCodeData + " ha sido añadido a la lista con el tiempo " + revMsg.tBeginTime);
-						ReceivedMsgBuffer.RevMsgAdd(revMsg);
+						// If use time lapse for laps.
+						if (ReadConfig.use_laps) {
+							var l = ReceivedMsgBuffer.getList();
+							var t = l.Where(tmsg => tmsg.sCodeData == revMsg.sCodeData);
+
+							// If the chip wasn't added yet, just add it
+							if (t.Count() == 0) {
+								log.Info("El chip " + revMsg.sCodeData + " ha sido añadido a la lista con el tiempo " +		revMsg.tBeginTime + " por su 1 vuelta.");
+								ReceivedMsgBuffer.RevMsgAdd(revMsg);
+							} else {
+								// If the chip was added previously, we order the list of this chip's entries according
+								// to its times and we get the last time it was added as a base to calc the time diff.
+								List<RevMsgStruct> sortedListByTime = t.OrderBy(o => o.tBeginTime).ToList();
+								var last = sortedListByTime.Last();
+								var elapsed = (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) - (last.tBeginTime.Ticks / TimeSpan.TicksPerMillisecond);
+								// Debug
+								//log.Debug("Now: " + (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond));
+								//log.Debug("Last: " + (last.tBeginTime.Ticks / TimeSpan.TicksPerMillisecond));
+								//log.Debug("ELAPSED: " + elapsed);
+								if (elapsed >= (ReadConfig.laps_time_between * 1000)) {
+									log.Info("El chip " + revMsg.sCodeData + " ha sido añadido a la lista con el tiempo " +		revMsg.tBeginTime + " por su " + (t.Count() + 1) + " vuelta.");
+									ReceivedMsgBuffer.RevMsgAdd(revMsg);
+								}
+							}
+						} else {
+							var l = ReceivedMsgBuffer.getList();
+							var t = l.Where(tmsg => tmsg.sCodeData == revMsg.sCodeData);
+
+							if (t.Count() == 0) {
+								log.Info("El chip " + revMsg.sCodeData + " ha sido añadido a la lista con el tiempo " +		revMsg.tBeginTime);
+								// Add it only once
+								ReceivedMsgBuffer.addOnce(revMsg);
+							}
+						}
 					}
 
 					bConnectIsOK = true;
@@ -330,13 +396,13 @@ namespace Cronomur_WRI
 				if (System.Environment.TickCount - dwStart > _readerReadTimeout)
 				{
 					// If after a number of seconds there is no chip signal, we reconnect just in case of some reader error.
-					if (!bConnectIsOK)
-					{
+					//if (!bConnectIsOK)
+					//{
 						//AddSafeTextEvent("Reiniciando el proceso de lectura...");
 						Console.WriteLine("Reconectando lectura...");
 						Reconnect();
 						//AddSafeTextEvent("Proceso reiniciado.");
-					}
+					//}
 
 					bConnectIsOK = false;
 					dwStart = System.Environment.TickCount;

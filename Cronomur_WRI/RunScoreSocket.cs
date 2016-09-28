@@ -12,6 +12,8 @@ namespace Cronomur_WRI
 {
 	class RunScoreSocket
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		// State object for receiving data from remote device.
 		public class StateObject
 		{
@@ -66,6 +68,8 @@ namespace Cronomur_WRI
 
 			_thread = new Thread(new ThreadStart(Connect));
 			_thread.Start();
+
+			log.Info("Conectado al servidor de RunScore.");
 		}
 
 		public static void disconnect()
@@ -84,6 +88,7 @@ namespace Cronomur_WRI
 				// Release the socket.
 				try
 				{
+					//client.Disconnect(false);
 					client.Shutdown(SocketShutdown.Both);
 				}
 				catch (Exception e)
@@ -95,7 +100,7 @@ namespace Cronomur_WRI
 				client = null;
 			}
 
-			Console.WriteLine("RunScoreSocket: Disconnected.");
+			log.Info("Desconectado del servidor de RunScore.");
 		}
 
 		public static bool IsConnected() { return client != null; }
@@ -120,8 +125,7 @@ namespace Cronomur_WRI
 				if (connectDone.WaitOne(ConfigCarrera._timeout))
 				{
 					AddSafeTextEvent("Conectado al servidor de RunScore.");
-				} else
-				{
+				} else {
 					MessageBox.Show("No se ha podido conectar al servidor de RunScore. Asegúrate de que la información proporcionada es correcta. Asegúrate también de que RunScore está escuchando peticiones en el puerto especificado, que tiene la casilla 'TCP' marcada, y que tiene como dispositivo 'RunScore Open'.\n\nPara intentar reconectar con RunScore debes volver a empezar la lectura.", "Excepción de tiempo de espera", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 
@@ -151,15 +155,14 @@ namespace Cronomur_WRI
 				// Complete the connection.
 				client.EndConnect(ar);
 
-				Console.WriteLine("Socket connected to {0}",
-					client.RemoteEndPoint.ToString());
+				log.InfoFormat("Socket connected to {0}", client.RemoteEndPoint.ToString());
 
 				// Signal that the connection has been made.
 				connectDone.Set();
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				log.Error(e.ToString());
 			}
 		}
 
@@ -177,7 +180,7 @@ namespace Cronomur_WRI
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				log.Error(e.ToString());
 			}
 		}
 
@@ -208,6 +211,7 @@ namespace Cronomur_WRI
 					if (state.sb.Length > 1)
 					{
 						response = state.sb.ToString();
+						log.InfoFormat("Data Received: {0}", state.sb.ToString());
 					}
 					// Signal that all bytes have been received.
 					receiveDone.Set();
@@ -215,13 +219,13 @@ namespace Cronomur_WRI
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				log.Error(e.ToString());
 			}
 		}
 
 		public static void Send(String data)
 		{
-			// Convert the string data to byte data using ASCII encoding.
+			// Convert the string data to byte data using (ASCII) encoding.
 			byte[] byteData = Encoding.UTF8.GetBytes(data + "<EOF>");
 
 			// Begin sending the data to the remote device.
@@ -238,14 +242,14 @@ namespace Cronomur_WRI
 
 				// Complete sending the data to the remote device.
 				int bytesSent = client.EndSend(ar);
-				Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+				log.InfoFormat("Sent {0} bytes to server.", bytesSent);
 
 				// Signal that all bytes have been sent.
 				sendDone.Set();
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				log.Error(e.ToString());
 			}
 		}
 

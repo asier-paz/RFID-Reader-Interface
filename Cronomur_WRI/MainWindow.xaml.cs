@@ -30,6 +30,10 @@ namespace Cronomur_WRI
 		/// List of views (frames)
 		/// </summary>
 		private List<Frame> views = new List<Frame>();
+		/// <summary>
+		/// Reading mode (tests)
+		/// </summary>
+		public static int _readMode = 0;
 
         public MainWindow()
         {
@@ -39,6 +43,7 @@ namespace Cronomur_WRI
 			views.Add(_frameInicio);
 			views.Add(_frameConfiguracion);
 			views.Add(_frameCarrera);
+			views.Add(_frameReadConfig);
 
 			// Registering to the reader handler events
 			readerHandler.OnConnect += ReaderHandler_OnConnect;
@@ -107,6 +112,10 @@ namespace Cronomur_WRI
 		private void btnCarrera_Click(object sender, RoutedEventArgs e)
 		{
 			showView(2);
+		}
+
+		private void btnReadConfig_Click(object sender, RoutedEventArgs e) {
+			showView(3);
 		}
 
 		/**

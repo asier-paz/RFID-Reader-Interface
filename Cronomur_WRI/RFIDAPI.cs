@@ -58,6 +58,9 @@ namespace Szaat.RFID.CSharpAPI
 			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YRevIDMsgDec")]
 			public static extern int SAAT_YRevIDMsgDec(IntPtr pHandle, out uint pId, out byte nBit);
 
+			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YReadIDCode")]
+			public static extern bool SAAT_YReadIDCode(IntPtr pHandle, byte nOpType, byte nIDType, int tagCount);
+
 			[DllImport("RFIDAPI.dll", EntryPoint = "SAAT_YAntennaPowerQuery")]
 			public static extern bool SAAT_YAntennaPowerQuery(IntPtr pHandle, ref byte rfPower);
 
@@ -266,6 +269,21 @@ namespace Szaat.RFID.CSharpAPI
 			try
 			{
 				return RFID_Wrapper.SAAT_YMakeTagUpLoadIDCode(pHandle, nOpType, nIDType);
+			}
+			catch (DllNotFoundException e)
+			{
+				log.Fatal("No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+				Inicio.events.add("Excepción: No se encuentra la librería RFIDAPI.dll. No se podrá interactuar con el dispositivo sin ella.");
+			}
+
+			return false;
+		}
+
+		public static bool SAAT_YReadIDCode(byte nOpType, byte nIDType, int tagCount)
+		{
+			try
+			{
+				return RFID_Wrapper.SAAT_YReadIDCode(pHandle, nOpType, nIDType, tagCount);
 			}
 			catch (DllNotFoundException e)
 			{

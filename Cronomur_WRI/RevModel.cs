@@ -43,6 +43,21 @@ namespace Cronomur_WRI
 			revMsgArray.Add(revMsg);
 		}
 
+		/// <summary>
+		/// Adds a RevMsgStruct only once.
+		/// </summary>
+		/// <param name="msg"></param>
+		public void addOnce(RevMsgStruct msg) {
+			var t = revMsgArray.Where(tmsg => tmsg.sCodeData == msg.sCodeData);
+
+			if (t.Count() == 0)
+				revMsgArray.Add(msg);
+		}
+
+		public List<RevMsgStruct> getList() {
+			return revMsgArray;
+		}
+
 		public void RemoveMsg(string RemoveCodeData)
 		{
 			int nRemoveNum = 0;

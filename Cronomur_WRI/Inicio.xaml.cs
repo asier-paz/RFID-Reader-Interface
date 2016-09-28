@@ -35,7 +35,7 @@ namespace Cronomur_WRI
 		public StreamWriter file_stream;
 		public string results_file_path = "";
 		public static bool sounds = false;
-
+		
 		/// <summary>
 		/// Instance of the reader handler
 		/// </summary>
@@ -86,7 +86,21 @@ namespace Cronomur_WRI
 					lines.Add("RSCI," + Rev.sCodeData.ToString() + "," + Rev.tBeginTime.ToString("HH:mm:ss.fff") + "," + ConfigCarrera._event_name);
 				}
 
-				// File writing
+				// ---- File writing
+
+				// Closing the Stream before creating a new one...
+				if (file_stream != null)
+				{
+					log.Info("Cerrando Stream de archivo de resultados...");
+					file_stream.Dispose();
+				}
+
+				// Open the file stream
+				// (se abre de nuevo el stream para limpiar la escritura anterior y no generar un archivo infinito)
+				log.Info("Abriendo nuevo Stream de archivo de resultados...");
+				file_stream = new StreamWriter(results_file_path, false);
+				file_stream.AutoFlush = true;
+
 				if (file_stream != null)
 				{
 					log.Info("Escribiendo el archivo de chips...");
@@ -222,11 +236,6 @@ namespace Cronomur_WRI
 					file_stream.Dispose();
 				}
 
-				// Open the file stream
-				log.Info("Abriendo nuevo Stream de archivo de resultados...");
-				file_stream = new StreamWriter(results_file_path, false);
-				file_stream.AutoFlush = true;
-
 				// Start reading
 				readerHandler.startReading();
 
@@ -253,7 +262,10 @@ namespace Cronomur_WRI
 				"\t\tDirección IP: " + ConfigCarrera._ip + "\n" +
 				"\t\tPuerto: " + ConfigCarrera._port + "\n" +
 				"\t\tNombre carrera: " + ConfigCarrera._event_name + "\n" +
-				"\t\tTiempo máximo para establecer conexión: " + ConfigCarrera._timeout + " millis.");
+				"\t\tTiempo máximo para establecer conexión: " + ConfigCarrera._timeout + " millis.\n" +
+				"\t[Conf. Lectura]\n" + 
+				"\t\tUsar sistema de vueltas: " + ReadConfig.use_laps + "\n" +
+				"\t\tTiempo entre vueltas (en segundos): " + ReadConfig.laps_time_between);
 		}
 
 		private void sound_Checked(object sender, RoutedEventArgs e)
